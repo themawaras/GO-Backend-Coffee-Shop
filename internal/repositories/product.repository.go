@@ -78,13 +78,13 @@ func (r *ProductRepository) RepositorySearchProduct(name string) ([]models.Produ
 	return result, nil
 }
 
-func (r *ProductRepository) RepositoryFilterPriceProduct(minPrice int, maxPrice int) ([]models.ProductModel, error) {
+func (r *ProductRepository) RepositoryFilterPriceProduct(minPrice, maxPrice string) ([]models.ProductModel, error) {
 	result := []models.ProductModel{}
 	query := `SELECT product_id, product_name, product_desc, product_price FROM products`
 
-	if minPrice != "" {
-		query += ` WHERE product_name ilike $1`
-		err := r.Select(&result, query, minPrice)
+	if minPrice != "" && maxPrice != "" {
+		query += ` WHERE product_price >= $1 AND product_price <= $2`
+		err := r.Select(&result, query, minPrice, maxPrice)
 		if err != nil {
 			return nil, err
 		}

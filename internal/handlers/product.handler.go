@@ -19,9 +19,33 @@ func InitializeProductHandler(r *repositories.ProductRepository) *HandlerProduct
 
 func (h *HandlerProduct) GetAllProduct(ctx *gin.Context) {
 	name, search_name := ctx.GetQuery("name")
+	minPrice, filter_min := ctx.GetQuery("minPrice")
+	maxPrice, filter_max := ctx.GetQuery("maxPrice")
 
 	if search_name {
 		result, err := h.RepositorySearchProduct(name)
+
+		if len(result) == 0 {
+			// log.Println(err)
+			ctx.JSON(http.StatusNotFound, gin.H{
+				"message": "data not found",
+			})
+			return
+		}
+		if err != nil {
+			// log.Println(err)
+			ctx.JSON(http.StatusInternalServerError, err)
+			return
+		}
+		ctx.JSON(http.StatusOK, gin.H{
+			"data":    result,
+			"message": "search product success",
+		})
+		return
+	}
+
+	if filter_min || filter_max {
+		result, err := h.RepositoryFilterPriceProduct(minPrice, maxPrice)
 
 		if len(result) == 0 {
 			// log.Println(err)
