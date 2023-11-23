@@ -29,8 +29,8 @@ func (r *OrderRepository) RepositoryGetAllOrder() ([]models.OrderModel, error) {
 
 func (r *OrderRepository) RepositoryGetOrderID(id string) ([]models.OrderModel, error) {
 	result := []models.OrderModel{}
-	query := `SELECT * FROM orders WHERE order_id = $1`
-	// query := `SELECT o.order_id, u.user_fullname, o.subtotal, o.promo_id, o.serve_id, o.total_disc, o.order_total, o.payment_id, o.order_status FROM orders o join users u on o.user_id = u.user_id WHERE o.order_id = $1`
+	// query := `SELECT * FROM orders WHERE order_id = $1`
+	query := `SELECT o.order_id, u.user_fullname, o.subtotal, o.promo_id, o.serve_id, o.total_disc, o.order_total, o.payment_id, o.order_status FROM orders o join users u on o.user_id = u.user_id WHERE o.order_id = $1`
 
 	err := r.Select(&result, query, id)
 	if err != nil {

@@ -47,7 +47,7 @@ func (r *ProductRepository) RepositoryCreateProduct(body *models.ProductModel) (
 }
 
 func (r *ProductRepository) RepositoryUpdateProduct(body *models.ProductModel, id string) (sql.Result, error) {
-	query := `UPDATE products SET product_name=:product_name updated_at = now() WHERE product_id =` + id
+	query := `UPDATE products SET product_name=:product_name, updated_at = now() WHERE product_id =` + id
 	result, err := r.NamedExec(query, body)
 	if err != nil {
 		return result, err
