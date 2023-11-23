@@ -91,3 +91,24 @@ func (r *ProductRepository) RepositoryFilterPriceProduct(minPrice, maxPrice stri
 	}
 	return result, nil
 }
+
+func (r *ProductRepository) RepositorySortProduct(sort string) ([]models.ProductModel, error) {
+	result := []models.ProductModel{}
+	query := `SELECT product_id, product_name, product_desc, product_price FROM products`
+
+	if sort == "low" {
+		query += ` ORDER BY product_price ASC`
+		err := r.Select(&result, query)
+		if err != nil {
+			return nil, err
+		}
+	}
+	if sort == "high" {
+		query += ` ORDER BY product_price DESC`
+		err := r.Select(&result, query)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return result, nil
+}

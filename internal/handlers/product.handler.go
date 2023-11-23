@@ -21,6 +21,7 @@ func (h *HandlerProduct) GetAllProduct(ctx *gin.Context) {
 	name, search_name := ctx.GetQuery("name")
 	minPrice, filter_min := ctx.GetQuery("minPrice")
 	maxPrice, filter_max := ctx.GetQuery("maxPrice")
+	sort, sortPrice := ctx.GetQuery("sort")
 
 	if search_name {
 		result, err := h.RepositorySearchProduct(name)
@@ -49,6 +50,28 @@ func (h *HandlerProduct) GetAllProduct(ctx *gin.Context) {
 
 		if len(result) == 0 {
 			// log.Println(err)
+			ctx.JSON(http.StatusNotFound, gin.H{
+				"message": "data not found",
+			})
+			return
+		}
+		if err != nil {
+			// log.Println(err)
+			ctx.JSON(http.StatusInternalServerError, err)
+			return
+		}
+		ctx.JSON(http.StatusOK, gin.H{
+			"data":    result,
+			"message": "search product success",
+		})
+		return
+	}
+
+	if sortPrice {
+		result, err := h.RepositorySortProduct(sort)
+
+		if len(result) == 0 {
+			log.Println(err)
 			ctx.JSON(http.StatusNotFound, gin.H{
 				"message": "data not found",
 			})
